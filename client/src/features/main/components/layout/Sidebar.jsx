@@ -9,6 +9,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen
 } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const Sidebar = ({ 
   isCollapsed, 
@@ -18,6 +19,8 @@ const Sidebar = ({
   onNewChat,
   currentChatId 
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={cn(
@@ -96,6 +99,7 @@ const Sidebar = ({
           icon={<User size={18} strokeWidth={2} />} 
           label="Profile" 
           isCollapsed={isCollapsed} 
+          onClick={() => navigate('/profile')}
         />
         <button
           onClick={toggleCollapse}

@@ -41,6 +41,12 @@
       transform: rotate(360deg);
     }
   }
+
+  .prose br {
+    display: block;
+    content: "";
+    margin-bottom: 0.75rem;
+  }
 }
 
 @theme inline {

@@ -14,6 +14,7 @@ const Home = () => {
     fetchChats,
     fetchMessages,
     startNewChat,
+    stopGenerating,
   } = useChat();
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const Home = () => {
         isStreaming={isStreaming}
         sendMessage={sendMessage} 
         onNewChat={startNewChat}
+        stopGenerating={stopGenerating}
       />
     </AppLayout>
   );

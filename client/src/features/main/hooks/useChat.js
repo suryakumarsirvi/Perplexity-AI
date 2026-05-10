@@ -131,6 +131,14 @@ export const useChat = () => {
     dispatch(setMessages([]));
   }, [dispatch]);
 
+  const stopGenerating = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      dispatch(setIsStreaming(false));
+      dispatch(setIsLoading(false));
+    }
+  }, [dispatch]);
+
   return {
     messages,
     isLoading,
@@ -141,5 +149,6 @@ export const useChat = () => {
     fetchChats,
     fetchMessages,
     startNewChat,
+    stopGenerating,
   };
 };

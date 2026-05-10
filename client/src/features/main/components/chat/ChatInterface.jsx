@@ -7,10 +7,10 @@ import {
 import { PromptInput, PromptInputTextarea } from "@/components/ui/prompt-input";
 import { Loader } from "@/components/ui/loader";
 import { Markdown } from "@/components/ui/markdown";
-import { ArrowRight, Plus, Search, Globe } from "lucide-react";
+import { ArrowRight, Plus, Search, Globe, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ChatInterface = ({ messages, isLoading, isStreaming, sendMessage, onNewChat }) => {
+const ChatInterface = ({ messages, isLoading, isStreaming, sendMessage, onNewChat, stopGenerating }) => {
   const scrollRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
   const [useWebSearch, setUseWebSearch] = useState(false);
@@ -71,13 +71,22 @@ const ChatInterface = ({ messages, isLoading, isStreaming, sendMessage, onNewCha
                       Attach
                     </button>
                   </div>
-                  <button
-                    onClick={() => handleSendMessage(inputValue)}
-                    disabled={!inputValue.trim() || isLoading || isStreaming}
-                    className="p-2 rounded-full bg-white text-black disabled:bg-[#2f3131] disabled:text-[#8e8e8e] hover:bg-gray-200 transition-colors disabled:cursor-not-allowed"
-                  >
-                    <ArrowRight size={18} strokeWidth={2.5} />
-                  </button>
+                  {isStreaming ? (
+                    <button
+                      onClick={stopGenerating}
+                      className="p-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors"
+                    >
+                      <Square fill="currentColor" size={16} strokeWidth={0} />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleSendMessage(inputValue)}
+                      disabled={!inputValue.trim() || isLoading}
+                      className="p-2 rounded-full bg-white text-black disabled:bg-[#2f3131] disabled:text-[#8e8e8e] hover:bg-gray-200 transition-colors disabled:cursor-not-allowed"
+                    >
+                      <ArrowRight size={18} strokeWidth={2.5} />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -99,22 +108,22 @@ const ChatInterface = ({ messages, isLoading, isStreaming, sendMessage, onNewCha
               {messages.map((msg, index) => (
                 <div key={index} className="flex flex-col">
                   {msg.role === "user" ? (
-                     <div className="text-[1.75rem] font-medium text-white mb-6 leading-snug">
+                     <div className="text-2xl sm:text-[1.75rem] font-semibold text-[#e8e8e6] tracking-tight leading-snug mb-2 mt-8">
                         {msg.content}
                      </div>
                   ) : (
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-2 text-sm text-[#8e8e8e] font-medium">
-                         <img src="/svg/perplexity.svg" alt="Perplexity Logo" className="w-4 h-4 invert opacity-70" />
+                    <div className="flex flex-col gap-2 mt-4 mb-8">
+                      <div className="flex items-center gap-2 text-base text-white font-semibold mb-2">
+                         <img src="/svg/perplexity.svg" alt="" className="w-5 h-5 invert" />
                          <span>Answer</span>
                       </div>
-                        <div className="pl-0 pt-2">
+                        <div className="pl-0">
                           {msg.isLoading && !msg.content ? (
                             <div className="py-2 text-[#8e8e8e]">
                               <Loader variant="text-shimmer" text="Generating answer..." size="sm" className="text-[#8e8e8e]" />
                             </div>
                           ) : (
-                            <Markdown className="prose prose-invert max-w-none text-[#e8e8e6] prose-p:leading-loose prose-p:text-[15px] prose-headings:font-medium prose-headings:text-white prose-headings:mt-8 prose-headings:mb-4 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-pre:bg-[#1a1a1a] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl prose-li:marker:text-[#8e8e8e] prose-ul:space-y-2 prose-strong:text-white prose-strong:font-semibold">
+                            <Markdown className="prose prose-invert max-w-none text-[#e8e8e6] leading-8 text-[15px] prose-p:mb-6 prose-headings:font-semibold prose-headings:text-white prose-headings:mt-8 prose-headings:mb-4 prose-a:text-[#3b82f6] prose-a:no-underline hover:prose-a:underline prose-pre:bg-[#111111] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl prose-li:marker:text-[#8e8e8e] prose-ul:space-y-2 prose-ul:mb-6 prose-strong:text-white prose-strong:font-bold">
                               {msg.content}
                             </Markdown>
                           )}
@@ -163,13 +172,22 @@ const ChatInterface = ({ messages, isLoading, isStreaming, sendMessage, onNewCha
                           Attach
                         </button>
                       </div>
-                      <button
-                        onClick={() => handleSendMessage(inputValue)}
-                        disabled={!inputValue.trim() || isLoading || isStreaming}
-                        className="p-1.5 rounded-full bg-white text-black disabled:bg-[#2f3131] disabled:text-[#8e8e8e] hover:bg-gray-200 transition-colors disabled:cursor-not-allowed"
-                      >
-                        <ArrowRight size={16} strokeWidth={2.5} />
-                      </button>
+                      {isStreaming ? (
+                        <button
+                          onClick={stopGenerating}
+                          className="p-1.5 rounded-full bg-white text-black hover:bg-gray-200 transition-colors"
+                        >
+                          <Square fill="currentColor" size={14} strokeWidth={0} />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleSendMessage(inputValue)}
+                          disabled={!inputValue.trim() || isLoading}
+                          className="p-1.5 rounded-full bg-white text-black disabled:bg-[#2f3131] disabled:text-[#8e8e8e] hover:bg-gray-200 transition-colors disabled:cursor-not-allowed"
+                        >
+                          <ArrowRight size={16} strokeWidth={2.5} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
