@@ -7,13 +7,21 @@ const useAuth = () => {
   const dispatch = useDispatch();
 
   const handleRegister = async(data)=>{
-    const response = await registerService(data);
-    dispatch(setUser(data));
+    try {
+      const response = await registerService(data);
+      dispatch(setUser(response.user || response));
+    } catch (error) {
+      console.error("Registration failed", error);
+    }
   }
 
   const handleLogin = async(data)=>{
-    const response = await loginService(data);
-    dispatch(setUser(data));
+    try {
+      const response = await loginService(data);
+      dispatch(setUser(response.user || response));
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   }
 
   return {handleRegister, handleLogin}

@@ -35,11 +35,14 @@ export const handleRegister = async (req, res) => {
     user.refreshToken = hashedToken;
     await user.save();
 
-    res.cookie("accessToken", accessToken, {
+    const cookieOptions = {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === "production",
       sameSite: "strict",
-    });
+    };
+
+    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     res.status(201).json({
       success: true,
@@ -75,25 +78,28 @@ export const handleLogin = async (req, res) => {
 
     const validPassword = await verifyHash(password, isExist.password);
 
-    const accessToken = generateToken(user._id, "15m");
-    const refreshToken = generateToken(user._id, "7d");
+    const accessToken = generateToken(isExist._id, "15m");
+    const refreshToken = generateToken(isExist._id, "7d");
     const hashedToken = await generateHash(refreshToken);
 
     isExist.refreshToken = hashedToken;
     await isExist.save();
 
-    res.cookie("accessToken", accessToken, {
+    const cookieOptions = {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === "production",
       sameSite: "strict",
-    });
+    };
+
+    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     res.status(201).json({
       success: true,
       message: "User loggedIn successfully",
       data: {
-        id: user._id,
-        email: user.email,
+        id: isExist._id,
+        email: isExist.email,
         accessToken: accessToken,
       },
     });
@@ -179,6 +185,7 @@ export const handleLogout = async (req, res) => {
         await user.save();
 
         res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
 
         return res.status(200).json({
             success: true,
@@ -193,6 +200,60 @@ export const handleLogout = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const handleRefresh = async (req, res) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(401).json({ success: false, message: "No refresh token provided" });
+    }
+
+    let decoded;
+    try {
+      decoded = verifyToken(refreshToken);
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Invalid refresh token" });
+    }
+
+    const user = await UserRepository.findById(decoded.id);
+
+    if (!user || !user.refreshToken) {
+      return res.status(401).json({ success: false, message: "User not found or invalid session" });
+    }
+
+    const isValid = await verifyHash(refreshToken, user.refreshToken);
+
+    if (!isValid) {
+      return res.status(401).json({ success: false, message: "Invalid refresh token" });
+    }
+
+    const newAccessToken = generateToken(user._id, "15m");
+    const newRefreshToken = generateToken(user._id, "7d");
+    const hashedToken = await generateHash(newRefreshToken);
+
+    user.refreshToken = hashedToken;
+    await user.save();
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: CONFIG.NODE_ENV === "production",
+      sameSite: "strict",
+    };
+
+    res.cookie("accessToken", newAccessToken, cookieOptions);
+    res.cookie("refreshToken", newRefreshToken, cookieOptions);
+
+    return res.status(200).json({
+      success: true,
+      message: "Token refreshed successfully",
+      accessToken: newAccessToken
+    });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({ success: false, message: "Internal server error during refresh" });
+  }
 };
 
 export const handleGetMe = async (req, res) => {

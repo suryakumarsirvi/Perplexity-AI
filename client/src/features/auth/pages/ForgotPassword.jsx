@@ -7,22 +7,20 @@ const ForgotPassword = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center bg-[#171615] text-white">
       <div className="flex flex-col items-center max-w-sm w-full p-6">
-        <div className="mb-8">
-            <img src="/svg/perplexity-text.svg" alt="Logo" className="h-6 opacity-90" />
-        </div>
+         <div className="mb-8 flex items-center gap-4">
+        <img src="/Primary w. Off-White@2x.png" alt="Logo" className="h-18" />
+      </div>
         
-        <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-medium mb-6">
-          Coming Soon
-        </div>
+      
         
-        <h1 className="text-xl font-serif mb-2">Reset Password</h1>
+        <h1 className="text-2xl font-serif mb-2">Reset Password</h1>
         <p className="text-neutral-400 text-sm text-center mb-8">
           This feature is currently under development. Please check back later.
         </p>
 
         <button 
           onClick={() => navigate('/')}
-          className="w-full px-4 py-2 bg-white text-black font-medium text-sm hover:bg-neutral-200 transition-colors rounded"
+          className="w-full px-4 py-2 cursor-pointer bg-white text-black font-medium text-sm hover:bg-neutral-200 transition-colors rounded"
         >
           Go Back to Home
         </button>

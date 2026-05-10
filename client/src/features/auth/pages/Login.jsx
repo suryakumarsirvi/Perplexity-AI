@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import useAuth from '../hooks/useAuth';
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
@@ -21,6 +22,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const {handleLogin} = useAuth();
 
   const validate = (name, value) => {
     let error = '';
@@ -52,6 +54,7 @@ const Login = () => {
       setIsSubmitting(true);
       setTimeout(() => {
         console.log('Login successful', formData);
+        handleLogin(formData);
         setIsSubmitting(false);
         setFormData({ email: '', password: '' });
         navigate('/home');

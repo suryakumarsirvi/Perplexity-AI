@@ -16,10 +16,15 @@ export const logoutService = async () =>{
 }
 
 export const getMeService = async()=>{
-    const response = await API.get('/auth/getme');
+    const response = await API.get('/auth/getMe');
     return response.data
 }
 
-// export const GoogleAuthURL = () =>{
-//     return 
-// }
+export const refreshService = async () => {
+    const response = await API.get('/auth/refresh');
+    return response.data;
+}
+
+export const GoogleAuthURL = () =>{
+    return API.get('/auth/google')
+}

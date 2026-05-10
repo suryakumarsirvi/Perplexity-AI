@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import useAuth from '../hooks/useAuth';
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
@@ -21,6 +22,7 @@ const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const {handleRegister} = useAuth();
 
   const validate = (name, value) => {
     let error = '';
@@ -55,10 +57,10 @@ const Register = () => {
     if (!nameError && !emailError && !passwordError) {
       setIsSubmitting(true);
       setTimeout(() => {
-        console.log('Register successful', formData);
+        handleRegister(formData)
         setIsSubmitting(false);
         setFormData({ name: '', email: '', password: '' });
-        // navigate('/home');
+        navigate('/home');
       }, 1000);
     }
   };
