@@ -5,6 +5,7 @@ import passport from '../src/services/passport.service.js';
 import AuthRouter from './routes/auth.routes.js';
 import errorMiddleware from './errors/error.middleware.js';
 import CookieParser from 'cookie-parser';
+import AIChatRouter from './routes/AIChat.routes.js';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get('/health', (req, res) => {
 
 
 app.use('/api/auth', AuthRouter);
+app.use('/api/chat', AIChatRouter)
 
 app.use(errorMiddleware);
 
