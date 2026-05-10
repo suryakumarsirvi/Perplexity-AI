@@ -38,7 +38,7 @@ export const handleRegister = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
     };
 
     res.cookie("accessToken", accessToken, cookieOptions);
@@ -88,7 +88,7 @@ export const handleLogin = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
     };
 
     res.cookie("accessToken", accessToken, cookieOptions);
@@ -135,7 +135,7 @@ export const handleGoogleAuth = async (req, res) => {
                 provider: 'google'
             };
 
-            user = await UserRepository.createUser(newUser);
+            user = await UserRepository.CreateUser(newUser);
         }
 
         const accessToken = generateToken(user._id, "15m");
@@ -148,12 +148,16 @@ export const handleGoogleAuth = async (req, res) => {
 
         await user.save();
 
-        const redirectURL =
-            `http://localhost:5173/google/callback` +
-            `?accessToken=${accessToken}` +
-            `&name=${encodeURIComponent(user.fullname)}` +
-            `&email=${encodeURIComponent(user.email)}` +
-            `&profilePicture=${encodeURIComponent(user.profilePicture || '')}`;
+        const cookieOptions = {
+          httpOnly: true,
+          secure: CONFIG.NODE_ENV === "production",
+          sameSite: "lax",
+        };
+
+        res.cookie("accessToken", accessToken, cookieOptions);
+        res.cookie("refreshToken", refreshToken, cookieOptions);
+
+        const redirectURL = `${CONFIG.CLIENT_URL}/google/callback`;
 
         return res.redirect(redirectURL);
 
@@ -239,7 +243,7 @@ export const handleRefresh = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
     };
 
     res.cookie("accessToken", newAccessToken, cookieOptions);

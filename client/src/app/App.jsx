@@ -11,6 +11,17 @@ const AppContent = () => {
 
   useEffect(() => {
     const initAuth = async () => {
+      const googleAuthPayload = localStorage.getItem('googleAuthPayload') || localStorage.getItem('googleAuthSuccess');
+      if (googleAuthPayload) {
+        const payload = JSON.parse(googleAuthPayload);
+        store.dispatch(setUser(payload));
+        localStorage.removeItem('googleAuthPayload');
+        localStorage.removeItem('googleAuthSuccess');
+        store.dispatch(setLoading(false));
+        setIsInitializing(false);
+        return;
+      }
+
       try {
         const response = await getMeService();
         if (response && (response.data || response.user || Object.keys(response).length > 0)) {

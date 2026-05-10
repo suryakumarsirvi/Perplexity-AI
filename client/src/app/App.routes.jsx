@@ -5,6 +5,7 @@ import AuthLayout from '../features/auth/pages/AuthLayout'
 import Home from '../features/main/pages/Home'
 import NotFound from '../features/main/pages/NotFound'
 import ForgotPassword from '../features/auth/pages/ForgotPassword'
+import GoogleCallback from '../features/auth/pages/GoogleCallback'
 
 const Router = createBrowserRouter([
     {
@@ -30,6 +31,13 @@ const Router = createBrowserRouter([
         element: 
         <PublicRoutes>
             <ForgotPassword />
+        </PublicRoutes>
+    },
+    {
+        path: '/google/callback',
+        element:
+        <PublicRoutes>
+            <GoogleCallback />
         </PublicRoutes>
     },
     {

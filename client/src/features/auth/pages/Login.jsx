@@ -22,7 +22,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {handleLogin} = useAuth();
+  const {handleLogin, handleGoogleAuth} = useAuth();
 
   const validate = (name, value) => {
     let error = '';
@@ -111,7 +111,11 @@ const Login = () => {
       </div>
 
       <div className="w-full space-y-3">
-        <button className="w-full flex cursor-pointer items-center justify-center gap-3 h-10 border border-neutral-700/50 rounded-md text-sm hover:bg-neutral-800/50 transition-colors">
+        <button
+          type="button"
+          onClick={handleGoogleAuth}
+          className="w-full flex cursor-pointer items-center justify-center gap-3 h-10 border border-neutral-700/50 rounded-md text-sm hover:bg-neutral-800/50 transition-colors"
+        >
           <GoogleIcon />
           Continue with Google
         </button>

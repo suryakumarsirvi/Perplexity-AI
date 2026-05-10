@@ -26,5 +26,5 @@ export const refreshService = async () => {
 }
 
 export const GoogleAuthURL = () =>{
-    return API.get('/auth/google')
+    return `${API.defaults.baseURL}/auth/google`
 }
